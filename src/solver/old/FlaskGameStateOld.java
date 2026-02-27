@@ -1,7 +1,6 @@
 package solver.old;
 
-// import org.hamcrest.Matchers;
-// import org.hamcrest.Matchers.*;
+import org.hamcrest.Matchers;
 import solver.base.Color;
 
 import java.util.*;
@@ -241,8 +240,7 @@ public class FlaskGameStateOld {
         if (o == null || getClass() != o.getClass()) return false;
         FlaskGameStateOld that = (FlaskGameStateOld) o;
 
-        // return Matchers.containsInAnyOrder(flasks.toArray()).matches(that.flasks);
-        return this.equals(that); // TODO: This checks for ordering, refactor to consider non-ordering as well.
+        return Matchers.containsInAnyOrder(flasks.toArray()).matches(that.flasks);
     }
 
     @Override

@@ -36,13 +36,9 @@ This repository uses GitHub Actions for Continuous Integration. The CI pipeline 
   - `//src:old` - Legacy code library
   - `//src:solver` - Main binary
 
-- **Tests**: Main test suite
-  - `//src:base_test` - Unit tests for core functionality
-
-### ❌ Excluded from CI
-- `//src:old_test` - Legacy code tests (known bugs with StackOverflowError in equals())
-  - These tests can be run locally: `bazel test //src:old_test`
-  - Should be fixed in a future refactoring
+- **Tests**: All test suites (`//src:all`)
+  - `//src:base_test` - Unit tests for core functionality (22 tests)
+  - `//src:old_test` - Unit tests for legacy implementation (15 tests)
 
 ## Running Tests Locally
 
@@ -50,22 +46,23 @@ This repository uses GitHub Actions for Continuous Integration. The CI pipeline 
 ```bash
 # Full CI simulation
 bazel build //src:all
-bazel test //src:base_test --test_output=errors
+bazel test //src:all --test_output=errors
 
 # Build verification
 bazel build //src:solver
 bazel run //src:solver
 ```
 
-### Run all tests (including legacy)
+### Run individual test suites
 ```bash
-# Warning: old_test will fail
-bazel test //src:... --test_output=errors
-```
-
-### Run only passing tests
-```bash
+# Run only base tests
 bazel test //src:base_test
+
+# Run only legacy tests
+bazel test //src:old_test
+
+# Run all tests with verbose output
+bazel test //src:all --test_output=all
 ```
 
 ## CI Requirements for PRs
