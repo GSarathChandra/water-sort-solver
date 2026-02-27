@@ -1,0 +1,14 @@
+# Bazel
+bazel-*
+.bazel
+.bazelbsp/
+MODULE.bazel.lock
+
+# IntelliJ Bazel Plugin
+.ijwb/
+.idea/
+*.iml
+.aswb/
+
+# OS
+.DS_Store

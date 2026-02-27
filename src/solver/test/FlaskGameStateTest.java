@@ -2,7 +2,7 @@ package solver.test;
 
 import java.util.List;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 import solver.base.FlaskGameState;
 
 import static solver.base.Color.*;

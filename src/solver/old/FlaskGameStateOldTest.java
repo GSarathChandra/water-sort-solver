@@ -1,7 +1,7 @@
 package solver.old;
 
 import solver.base.Color;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,6 @@ import java.util.Stack;
 import static solver.base.Color.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static solver.old.FlaskGameStateOld.buildState;
-import static org.junit.Assert.*;
 
 public class FlaskGameStateOldTest {
 
