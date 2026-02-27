@@ -33,12 +33,10 @@ This repository uses GitHub Actions for Continuous Integration. The CI pipeline 
 - **Build**: All production code (`//src:all`)
   - `//src:base` - Core solver classes
   - `//src:bfs` - BFS solver implementation
-  - `//src:old` - Legacy code library
   - `//src:solver` - Main binary
 
-- **Tests**: All test suites (`//src:all`)
+- **Tests**: Main test suite
   - `//src:base_test` - Unit tests for core functionality (22 tests)
-  - `//src:old_test` - Unit tests for legacy implementation (15 tests)
 
 ## Running Tests Locally
 
@@ -46,23 +44,14 @@ This repository uses GitHub Actions for Continuous Integration. The CI pipeline 
 ```bash
 # Full CI simulation
 bazel build //src:all
-bazel test //src:all --test_output=errors
+bazel test //src:base_test --test_output=errors
 
 # Build verification
 bazel build //src:solver
 bazel run //src:solver
-```
 
-### Run individual test suites
-```bash
-# Run only base tests
-bazel test //src:base_test
-
-# Run only legacy tests
-bazel test //src:old_test
-
-# Run all tests with verbose output
-bazel test //src:all --test_output=all
+# Run tests with verbose output
+bazel test //src:base_test --test_output=all
 ```
 
 ## CI Requirements for PRs

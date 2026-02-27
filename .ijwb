@@ -1,0 +1,23 @@
+directories:
+  # Source directories
+  src/solver/base
+  src/solver/bfs
+  src/solver/old
+  src/solver/test
+
+targets:
+  # Build targets
+  //src:base
+  //src:bfs
+  //src:old
+  //src:solver
+
+  # Test targets
+  //src:base_test
+  //src:old_test
+
+derive_targets_from_directories: true
+
+java_language_level: 11
+
+workspace_type: java
