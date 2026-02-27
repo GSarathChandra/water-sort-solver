@@ -1,4 +1,4 @@
-package com.solver.base;
+package solver.base;
 
 public class Move {
 

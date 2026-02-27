@@ -1,0 +1,91 @@
+# Java build rules for water-sort-solver
+
+# Base library containing core solver classes
+java_library(
+    name = "base",
+    srcs = glob([
+        "solver/base/*.java",
+    ]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "@maven//:org_hamcrest_hamcrest",
+    ],
+)
+
+# BFS solver library
+java_library(
+    name = "bfs",
+    srcs = glob([
+        "solver/bfs/*.java",
+    ]),
+    visibility = ["//visibility:public"],
+    deps = [":base"],
+)
+
+# Old/legacy code library
+java_library(
+    name = "old",
+    srcs = glob(
+        ["solver/old/*.java"],
+        exclude = ["solver/old/*Test.java"],
+    ),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":base",
+        "@maven//:org_hamcrest_hamcrest",
+    ],
+)
+
+# Main binary
+java_binary(
+    name = "solver",
+    main_class = "solver.base.FlaskGameSolverMain",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        ":base",
+        ":bfs",
+    ],
+)
+
+# Test library - using JUnit 5 (Jupiter)
+java_test(
+    name = "base_test",
+    srcs = glob([
+        "solver/test/*.java",
+    ]),
+    test_class = "solver.test.FlaskGameStateTest",
+    visibility = ["//visibility:public"],
+    use_testrunner = False,
+    main_class = "org.junit.platform.console.ConsoleLauncher",
+    deps = [
+        ":base",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+        "@maven//:org_junit_jupiter_junit_jupiter_engine",
+        "@maven//:org_junit_platform_junit_platform_console",
+    ],
+    args = [
+        "--select-package=solver.test",
+    ],
+)
+
+# Old implementation test
+java_test(
+    name = "old_test",
+    srcs = glob([
+        "solver/old/FlaskGameStateOldTest.java",
+    ]),
+    test_class = "solver.old.FlaskGameStateOldTest",
+    visibility = ["//visibility:public"],
+    use_testrunner = False,
+    main_class = "org.junit.platform.console.ConsoleLauncher",
+    deps = [
+        ":base",
+        ":old",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+        "@maven//:org_junit_jupiter_junit_jupiter_engine",
+        "@maven//:org_junit_platform_junit_platform_console",
+    ],
+    args = [
+        "--select-package=solver.old",
+    ],
+)

@@ -1,0 +1,17 @@
+directories:
+  src/solver
+
+targets:
+  //src:all
+  //src:base
+  //src:bfs
+  //src:old
+  //src:solver
+  //src:base_test
+  //src:old_test
+
+derive_targets_from_directories: true
+
+java_language_level: 9
+
+workspace_type: java
