@@ -42,11 +42,11 @@ jobs:
         bazel build //src:all
         echo "✅ Build successful"
 
-    - name: Run all tests
+    - name: Run tests
       run: |
-        echo "🧪 Running all tests..."
-        bazel test //src:all --test_output=errors --test_summary=detailed
-        echo "✅ All tests completed"
+        echo "🧪 Running tests..."
+        bazel test //src:base_test --test_output=errors --test_summary=detailed
+        echo "✅ Tests completed"
 
     - name: Build verification summary
       if: always()

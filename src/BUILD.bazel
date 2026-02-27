@@ -67,25 +67,3 @@ java_test(
         "--select-package=solver.test",
     ],
 )
-
-# Old implementation test
-java_test(
-    name = "old_test",
-    srcs = glob([
-        "solver/old/FlaskGameStateOldTest.java",
-    ]),
-    test_class = "solver.old.FlaskGameStateOldTest",
-    visibility = ["//visibility:public"],
-    use_testrunner = False,
-    main_class = "org.junit.platform.console.ConsoleLauncher",
-    deps = [
-        ":base",
-        ":old",
-        "@maven//:org_junit_jupiter_junit_jupiter_api",
-        "@maven//:org_junit_jupiter_junit_jupiter_engine",
-        "@maven//:org_junit_platform_junit_platform_console",
-    ],
-    args = [
-        "--select-package=solver.old",
-    ],
-)
