@@ -1,0 +1,13 @@
+# Code Owners for water-sort-solver
+# These owners will be automatically requested for review when someone opens a PR.
+# Note: As the sole developer, you cannot approve your own PRs on GitHub.
+
+# Global owner - owns everything unless a later match takes precedence
+* @GSarathChandra
+
+# Specific ownership (examples for future use)
+# *.java @GSarathChandra
+# /src/solver/base/ @GSarathChandra
+# /.github/ @GSarathChandra
+# /WORKSPACE @GSarathChandra
+# /src/BUILD.bazel @GSarathChandra
