@@ -36,6 +36,7 @@ maven_install(
     artifacts = [
         "org.junit.jupiter:junit-jupiter-api:5.10.1",
         "org.junit.jupiter:junit-jupiter-engine:5.10.1",
+        "org.junit.platform:junit-platform-console:1.10.1",
         "org.hamcrest:hamcrest:2.2",
     ],
     repositories = [
