@@ -29,11 +29,6 @@ public class FlaskGameState{
     }
 
     // public for Testing
-    public boolean removeRedundantMovesToEmpty(){
-        return true;
-    } // Verified to be working.
-
-    // public for Testing
     public boolean removeReverseMoves(){
         return true;
     } // Yet to be verified.
@@ -89,82 +84,58 @@ public class FlaskGameState{
 
                 // When moving to empty, we're allowing only size < MAX to avoid redundant moves
                 // - i.e., moving solved flasks into empty flasks or flask with single color into empty flask
-                if(removeRedundantMovesToEmpty()){
-                    // Check "non-empty first -> empty second" scenario.
-                    if(!first.isEmpty() && second.isEmpty()
-                            // Move shouldn't be considered if top color is the only color in the flask.
-                            && firstTopColorSize != first.size()
-                            // Move should be considered only if the top color can be moved entirely.
-                            && firstTopColorSize < MAX_FLASK_SIZE){
 
-                        // Check if there exists another non-empty flask which would solve the color.
-                        boolean foundLastStepElseWhere = false;
-                        for(int k = i; k < flasks.size(); k++){
-                            Stack<Color> kth = flasks.get(k);
-                            int kthFlaskTopColorSize = getTopColorSize(kth);
-                            if(k != i && k != j && !kth.isEmpty() // avoid moving to empty + protection against EmptyStackException
-                                    && first.peek().equals(kth.peek()) // colors match
-                                    && kthFlaskTopColorSize == kth.size() // topColor in kth flask is the only color in it.
-                                    && kthFlaskTopColorSize + firstTopColorSize == MAX_FLASK_SIZE // kth flask and second flask form the whole
-                            ){
-                                foundLastStepElseWhere = true;
-                                String elsewhereMove = String.format(MOVE_FORMAT, firstTopColorSize, i, k);
-                                if(isDebugMode()) System.out.println("Found last step elsewhere: " + elsewhereMove + " for " + this.getState());
-                            }
-                        }
-                        if(!foundLastStepElseWhere){
-                            String nextMove = String.format(MOVE_FORMAT, firstTopColorSize, i, j);
-                            if (isDebugMode()) System.out.println("Case 4: " + nextMove);
-                            moves.add(nextMove);
+                // Check "non-empty first -> empty second" scenario.
+                if(!first.isEmpty() && second.isEmpty()
+                        // Move shouldn't be considered if top color is the only color in the flask.
+                        && firstTopColorSize != first.size()
+                        // Move should be considered only if the top color can be moved entirely.
+                        && firstTopColorSize < MAX_FLASK_SIZE){
+
+                    // Check if there exists another non-empty flask which would solve the color.
+                    boolean foundLastStepElseWhere = false;
+                    for(int k = 0; k < flasks.size(); k++){
+                        Stack<Color> kth = flasks.get(k);
+                        int kthFlaskTopColorSize = getTopColorSize(kth);
+                        if(k != i && k != j && !kth.isEmpty() // avoid moving to empty + protection against EmptyStackException
+                                && first.peek().equals(kth.peek()) // colors match
+                                && kthFlaskTopColorSize == kth.size() // topColor in kth flask is the only color in it.
+                                && kthFlaskTopColorSize + firstTopColorSize == MAX_FLASK_SIZE // kth flask and first flask's top color form the whole
+                        ){
+                            foundLastStepElseWhere = true;
+                            String elsewhereMove = String.format(MOVE_FORMAT, firstTopColorSize, i, k);
+                            if(isDebugMode()) System.out.println("Found last step elsewhere: " + elsewhereMove + " for " + this.getState());
                         }
                     }
-
-                    // Check "non-empty second -> empty first" scenario.
-                    if(first.isEmpty() && !second.isEmpty()
-                            // Move shouldn't be considered if top color is the only color in the flask.
-                            && secondTopColorSize != second.size()
-                            // Move should be considered only if the top color can be moved entirely.
-                            && secondTopColorSize < MAX_FLASK_SIZE){
-                        // Check if there exists another flask which would solve the color.
-                        boolean foundLastStepElseWhere = false;
-                        for(int k = i; k < flasks.size(); k++){
-                            Stack<Color> kth = flasks.get(k);
-                            int kthFlaskTopColorSize = getTopColorSize(kth);
-                            if(k != i && k != j && !kth.isEmpty()  // avoid moving to empty + protection against EmptyStackException
-                                    && second.peek().equals(kth.peek())    // colors match
-                                    && kthFlaskTopColorSize == kth.size()  // topColor in kth flask is the only color in it.
-                                    && kthFlaskTopColorSize + secondTopColorSize == MAX_FLASK_SIZE // kth flask and second flask form the whole
-                            ){
-                                foundLastStepElseWhere = true;
-                                String elsewhereMove = String.format(MOVE_FORMAT, secondTopColorSize, j, k);
-                                if(isDebugMode()) System.out.println("Found last step elsewhere: " + elsewhereMove + " for " + this.getState());
-                            }
-                        }
-                        if(!foundLastStepElseWhere){
-                            String nextMove = String.format(MOVE_FORMAT, secondTopColorSize, j, i);
-                            if (isDebugMode()) System.out.println("Case 4: " + nextMove);
-                            moves.add(nextMove);
-                        }
-                    }
-                } else {
-                    // Retaining else block for backup until confident about removeRedundantMovesToEmpty.
-                    // Check "non-empty first -> empty second" scenario.
-                    if(!first.isEmpty() && second.isEmpty()
-                            // Move shouldn't be considered if top color is the only color in the flask.
-                            && firstTopColorSize != first.size()
-                            // Move should be considered only if the top color can be moved entirely.
-                            && firstTopColorSize < MAX_FLASK_SIZE) {
+                    if(!foundLastStepElseWhere){
                         String nextMove = String.format(MOVE_FORMAT, firstTopColorSize, i, j);
-                        if(isDebugMode()) System.out.println("Case 3: " + nextMove);
+                        if (isDebugMode()) System.out.println("Case 3: " + nextMove);
                         moves.add(nextMove);
                     }
+                }
 
-                    // Check "non-empty second -> empty first" scenario.
-                    if(first.isEmpty() && !second.isEmpty()
-                            // Move shouldn't be considered if top color is the only color in the flask.
-                            && secondTopColorSize != second.size()
-                            // Move should be considered only if the top color can be moved entirely.
-                            && secondTopColorSize < MAX_FLASK_SIZE){
+                // Check "non-empty second -> empty first" scenario.
+                if(first.isEmpty() && !second.isEmpty()
+                        // Move shouldn't be considered if top color is the only color in the flask.
+                        && secondTopColorSize != second.size()
+                        // Move should be considered only if the top color can be moved entirely.
+                        && secondTopColorSize < MAX_FLASK_SIZE){
+                    // Check if there exists another flask which would solve the color.
+                    boolean foundLastStepElseWhere = false;
+                    for(int k = 0; k < flasks.size(); k++){
+                        Stack<Color> kth = flasks.get(k);
+                        int kthFlaskTopColorSize = getTopColorSize(kth);
+                        if(k != i && k != j && !kth.isEmpty()  // avoid moving to empty + protection against EmptyStackException
+                                && second.peek().equals(kth.peek())    // colors match
+                                && kthFlaskTopColorSize == kth.size()  // topColor in kth flask is the only color in it.
+                                && kthFlaskTopColorSize + secondTopColorSize == MAX_FLASK_SIZE // kth flask and second flask's top color form the whole
+                        ){
+                            foundLastStepElseWhere = true;
+                            String elsewhereMove = String.format(MOVE_FORMAT, secondTopColorSize, j, k);
+                            if(isDebugMode()) System.out.println("Found last step elsewhere: " + elsewhereMove + " for " + this.getState());
+                        }
+                    }
+                    if(!foundLastStepElseWhere){
                         String nextMove = String.format(MOVE_FORMAT, secondTopColorSize, j, i);
                         if (isDebugMode()) System.out.println("Case 4: " + nextMove);
                         moves.add(nextMove);
