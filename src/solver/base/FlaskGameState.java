@@ -372,9 +372,9 @@ public class FlaskGameState{
                 continue;
             }
             Stack<Color> kth = flasks.get(k);
-            if (!kth.isEmpty() && color.equals(kth.peek())) {
+            if (!kth.isEmpty() && color.equals(kth.peek())) { // avoid moving to empty + protection against EmptyStackException + colors match
                 int kthTopSize = getTopColorSize(kth);
-                if (kthTopSize == kth.size() && kthTopSize + colorSize == MAX_FLASK_SIZE) {
+                if (kthTopSize == kth.size() && kthTopSize + colorSize == MAX_FLASK_SIZE) { // topColor in kth flask is the only color in it + kth flask and current flask form the whole
                     if (isDebugMode()) {
                         String elsewhereMove = String.format(MOVE_FORMAT, colorSize, fromIndex, k);
                         System.out.println("Found last step elsewhere: " + elsewhereMove + " for " + this.getState());
