@@ -24,6 +24,26 @@ public class FlaskGameStateTest {
     }
 
     @Test
+    public void testGetNextMoves_redundantToEmpty_loopRangeCheck(){
+        // Flask 0: [RED, RED] (matching, solves)
+        // Flask 1: [PINK, RED, RED] (moving from)
+        // Flask 2: [] (empty)
+        FlaskGameState state = buildState(List.of(
+                List.of(RED, RED),
+                List.of(PINK, RED, RED),
+                List.of()
+        ));
+
+        List<String> moves = state.getNextMoves();
+
+        // "2@1->0" should be present (valid move to matching flask that completes it)
+        assertTrue(moves.contains("2@1->0"), "Should contain move to matching flask");
+
+        // "2@1->2" should NOT be present because it's redundant (can be solved in Flask 0)
+        assertFalse(moves.contains("2@1->2"), "Should NOT contain redundant move to empty flask when it can be solved elsewhere (even at lower index)");
+    }
+
+    @Test
     public void testGetTopColorSize_onlyOneColorAndSolved(){
         FlaskGameState state = buildState(List.of(
                 List.of(RED, RED, RED, RED)
