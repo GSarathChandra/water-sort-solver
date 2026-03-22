@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import solver.base.FlaskGameState;
+import solver.base.Move;
 
 import static solver.base.Color.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,7 +85,7 @@ public class FlaskGameStateTest {
                 List.of(PINK, PINK, RED, RED),
                 List.of(ORANGE, RED)
         ));
-        List<String> expectedMoves = List.of("2@0->1");
+        List<Move> expectedMoves = List.of(new Move(2, RED, 0, 1));
 
         // Assert
         assertFalse(state.isSolved());
@@ -97,7 +98,7 @@ public class FlaskGameStateTest {
                 List.of(PINK, PINK, RED, RED),
                 List.of(ORANGE, RED, RED)
         ));
-        List<String> expectedMoves = List.of();
+        List<Move> expectedMoves = List.of();
 
         // Assert
         assertFalse(state.isSolved());
@@ -110,7 +111,7 @@ public class FlaskGameStateTest {
                 List.of(PINK, PINK, RED),
                 List.of(ORANGE, RED, RED)
         ));
-        List<String> expectedMoves = List.of("1@0->1");
+        List<Move> expectedMoves = List.of(new Move(1, RED, 0, 1));
 
         // Assert
         assertFalse(state.isSolved());
@@ -123,7 +124,7 @@ public class FlaskGameStateTest {
                 List.of(PINK, RED, RED),
                 List.of(ORANGE, ORANGE, RED)
         ));
-        List<String> expectedMoves = List.of("1@1->0");
+        List<Move> expectedMoves = List.of(new Move(1, RED, 1, 0));
 
         // Assert
         assertFalse(state.isSolved());
@@ -140,9 +141,9 @@ public class FlaskGameStateTest {
         // Assert
         assertFalse(state.isSolved());
         if(state.removeReverseMoves()){
-            assertIterableEquals(List.of("1@0->1"), state.getNextMoves());
+            assertIterableEquals(List.of(new Move(1, RED, 0, 1)), state.getNextMoves());
         } else {
-            assertIterableEquals(List.of("1@0->1", "1@1->0"), state.getNextMoves());
+            assertIterableEquals(List.of(new Move(1, RED, 0, 1), new Move(1, RED, 1, 0)), state.getNextMoves());
         }
     }
 
@@ -152,7 +153,7 @@ public class FlaskGameStateTest {
                 List.of(PINK, RED, RED),
                 List.of()
         ));
-        List<String> expectedMoves = List.of("2@0->1");
+        List<Move> expectedMoves = List.of(new Move(2, RED, 0, 1));
 
         // Assert
         assertFalse(state.isSolved());
@@ -169,7 +170,7 @@ public class FlaskGameStateTest {
                 List.of(),
                 List.of(RED, RED)
         ));
-        List<String> expectedMoves = List.of("2@0->2");
+        List<Move> expectedMoves = List.of(new Move(2, RED, 0, 2));
 
         // Assert
         assertFalse(state.isSolved());
@@ -184,7 +185,7 @@ public class FlaskGameStateTest {
                 List.of(PINK, PINK, PINK),
                 List.of()
         ));
-        List<String> expectedMoves = List.of();
+        List<Move> expectedMoves = List.of();
 
         // Assert
         assertFalse(state.isSolved());
@@ -197,7 +198,7 @@ public class FlaskGameStateTest {
                 List.of(PINK, PINK, PINK, PINK),
                 List.of()
         ));
-        List<String> expectedMoves = List.of();
+        List<Move> expectedMoves = List.of();
 
         // Assert
         assertTrue(state.isSolved());

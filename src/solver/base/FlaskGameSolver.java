@@ -126,7 +126,7 @@ public class FlaskGameSolver {
         }
 
         // Iterate through nextMoves and enqueue the unvisited ones.
-        for(String nextMove : state.getNextMoves()){
+        for(Move nextMove : state.getNextMoves()){
             state.makeMove(nextMove);
             stateCounter++;
             printDebugData();

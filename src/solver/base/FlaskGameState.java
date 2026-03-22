@@ -9,20 +9,11 @@ public class FlaskGameState{
 
     public static final int MAX_FLASK_SIZE = 4;
 
-    private static final String ARROW = "->";
-    private static final String AT = "@";
-
-    private static final String MOVE_FORMAT = "%d@%d->%d";
-
-    private static final String SOLUTION_STEP_FORMAT = "%2d. %s from %d to %d\n";
-
     //TODO: Change to  private + constructor & setter.
     //TODO: Implement Builder.
     public List<Stack<Color>> flasks;
 
-    //TODO: Change to List of Moves.
-    //TODO: Better named as stateHistory?
-    public LinkedList<String> movesHistory;
+    public LinkedList<Move> movesHistory;
 
     private boolean isDebugMode(){
         return false;
@@ -48,8 +39,8 @@ public class FlaskGameState{
         return true;
     }
 
-    public List<String> getNextMoves(){
-        List<String> moves = new ArrayList<>();
+    public List<Move> getNextMoves(){
+        List<Move> moves = new ArrayList<>();
 
         for(int i = 0; i < flasks.size(); i++){
             for(int j = i+1; j < flasks.size(); j++){
@@ -63,7 +54,7 @@ public class FlaskGameState{
                 if(!first.isEmpty() && !second.isEmpty() && first.peek().equals(second.peek())
                         // Move should be considered only if the top color can be moved entirely.
                         && firstTopColorSize + second.size() <= MAX_FLASK_SIZE){
-                    String nextMove = String.format(MOVE_FORMAT, firstTopColorSize, i, j);
+                    Move nextMove = new Move(firstTopColorSize, first.peek(), i, j);
                     if(isDebugMode()) System.out.println("Case 1: " + nextMove);
                     moves.add(nextMove);
                 }
@@ -72,10 +63,10 @@ public class FlaskGameState{
                 if(!first.isEmpty() && !second.isEmpty() && second.peek().equals(first.peek())
                         // Move should be considered only if the top color can be moved entirely.
                         && secondTopColorSize + first.size() <= MAX_FLASK_SIZE){
-                    String nextMove = String.format(MOVE_FORMAT, secondTopColorSize, j, i);
+                    Move nextMove = new Move(secondTopColorSize, second.peek(), j, i);
                     if(isDebugMode()) System.out.println("Case 2: " + nextMove);
 
-                    String reverseMove = String.format(MOVE_FORMAT, firstTopColorSize, i, j);
+                    Move reverseMove = new Move(firstTopColorSize, first.peek(), i, j);
                     if(removeReverseMoves()){
                         if(!moves.contains(reverseMove)){
                             moves.add(nextMove);
@@ -108,12 +99,12 @@ public class FlaskGameState{
                                     && kthFlaskTopColorSize + firstTopColorSize == MAX_FLASK_SIZE // kth flask and second flask form the whole
                             ){
                                 foundLastStepElseWhere = true;
-                                String elsewhereMove = String.format(MOVE_FORMAT, firstTopColorSize, i, k);
+                                Move elsewhereMove = new Move(firstTopColorSize, first.peek(), i, k);
                                 if(isDebugMode()) System.out.println("Found last step elsewhere: " + elsewhereMove + " for " + this.getState());
                             }
                         }
                         if(!foundLastStepElseWhere){
-                            String nextMove = String.format(MOVE_FORMAT, firstTopColorSize, i, j);
+                            Move nextMove = new Move(firstTopColorSize, first.peek(), i, j);
                             if (isDebugMode()) System.out.println("Case 4: " + nextMove);
                             moves.add(nextMove);
                         }
@@ -136,12 +127,12 @@ public class FlaskGameState{
                                     && kthFlaskTopColorSize + secondTopColorSize == MAX_FLASK_SIZE // kth flask and second flask form the whole
                             ){
                                 foundLastStepElseWhere = true;
-                                String elsewhereMove = String.format(MOVE_FORMAT, secondTopColorSize, j, k);
+                                Move elsewhereMove = new Move(secondTopColorSize, second.peek(), j, k);
                                 if(isDebugMode()) System.out.println("Found last step elsewhere: " + elsewhereMove + " for " + this.getState());
                             }
                         }
                         if(!foundLastStepElseWhere){
-                            String nextMove = String.format(MOVE_FORMAT, secondTopColorSize, j, i);
+                            Move nextMove = new Move(secondTopColorSize, second.peek(), j, i);
                             if (isDebugMode()) System.out.println("Case 4: " + nextMove);
                             moves.add(nextMove);
                         }
@@ -154,7 +145,7 @@ public class FlaskGameState{
                             && firstTopColorSize != first.size()
                             // Move should be considered only if the top color can be moved entirely.
                             && firstTopColorSize < MAX_FLASK_SIZE) {
-                        String nextMove = String.format(MOVE_FORMAT, firstTopColorSize, i, j);
+                        Move nextMove = new Move(firstTopColorSize, first.peek(), i, j);
                         if(isDebugMode()) System.out.println("Case 3: " + nextMove);
                         moves.add(nextMove);
                     }
@@ -165,7 +156,7 @@ public class FlaskGameState{
                             && secondTopColorSize != second.size()
                             // Move should be considered only if the top color can be moved entirely.
                             && secondTopColorSize < MAX_FLASK_SIZE){
-                        String nextMove = String.format(MOVE_FORMAT, secondTopColorSize, j, i);
+                        Move nextMove = new Move(secondTopColorSize, second.peek(), j, i);
                         if (isDebugMode()) System.out.println("Case 4: " + nextMove);
                         moves.add(nextMove);
                     }
@@ -182,13 +173,10 @@ public class FlaskGameState{
         return moves;
     }
 
-    private void updateFlasksForMove(String move){
-        // Extract top color size.
-        int moveColorSize = Integer.parseInt(move.split(AT)[0]);
-
-        String[] indices = move.split(AT)[1].split(ARROW);
-        int fromFlaskIndex = Integer.parseInt(indices[0]);
-        int toFlaskIndex = Integer.parseInt(indices[1]);
+    private void updateFlasksForMove(Move move){
+        int moveColorSize = move.getTopColorSize();
+        int fromFlaskIndex = move.getFromFlaskIndex();
+        int toFlaskIndex = move.getToFlaskIndex();
 
         boolean isMoveValid = true;
 
@@ -205,39 +193,15 @@ public class FlaskGameState{
         }
     }
 
-    //TODO: Change to receive instance of Move instead of String.
-    public void makeMove(String move){
-        // TODO: Validate move.
-
-        // TODO: Looks like the splitting of the logic into updateFlasksForMove is breaking!!!
+    public void makeMove(Move move){
         updateFlasksForMove(move);
-
-        // This step used to add "this.getState()" in an earlier version of the code.
-        // However, we realized that adding the entire state is overkill. So, keeping track of only moves.
-        // And using the moves to build the solution step by step, while saving space.
         this.movesHistory.add(move);
     }
 
     public void undoLastMove() {
         if(!this.movesHistory.isEmpty()){
-            // Get last move and update history.
-            String lastMove = this.movesHistory.removeLast();
-
-            // Extract top color size.
-            String lastMoveSize = lastMove.split(AT)[0];
-
-            // Reverse indices.
-            String[] lastMoveIndices = lastMove.split(AT)[1].split(ARROW);
-            String undoMoveIndices = String.join(ARROW, lastMoveIndices[1], lastMoveIndices[0]);
-
-            // Join step count and reversed indices to get the move to effectively undo the last move.
-            String undoMove = String.join(AT, lastMoveSize, undoMoveIndices);
-
-            if(Integer.parseInt(lastMoveSize) == 0){
-                System.out.println("Attempted invalid move :- " + undoMove + "for lastMove = " + lastMove);
-            }
-            // Check if undoMove is valid
-            updateFlasksForMove(undoMove);
+            Move lastMove = this.movesHistory.removeLast();
+            updateFlasksForMove(lastMove.getUndoMove());
         }
     }
 
@@ -289,8 +253,8 @@ public class FlaskGameState{
 
     public void printStateHistory(){
         System.out.println("-----");
-        for(String move : movesHistory) {
-            System.out.print(move + " ");
+        for(Move move : movesHistory) {
+            System.out.print(move.getShortVersion() + " ");
         }
         System.out.println("\n-----");
     }
@@ -307,14 +271,9 @@ public class FlaskGameState{
         System.out.print(this.getState());
 
         for (int solutionStepCount = 0; solutionStepCount < this.movesHistory.size(); solutionStepCount++) {
-            String move = movesHistory.get(solutionStepCount);
+            Move move = movesHistory.get(solutionStepCount);
 
-            // Extract values from move.
-            String[] indices = move.split(AT)[1].split(ARROW);
-            int fromFlaskIndex = Integer.parseInt(indices[0]);
-            int toFlaskIndex = Integer.parseInt(indices[1]);
-            Color colorToMove = this.flasks.get(fromFlaskIndex).peek();
-            System.out.printf(SOLUTION_STEP_FORMAT, solutionStepCount+1, colorToMove, fromFlaskIndex, toFlaskIndex);
+            System.out.printf("%2d. %s\n", solutionStepCount+1, move.getVerboseVersion());
 
             updateFlasksForMove(move);
 
@@ -369,37 +328,6 @@ public class FlaskGameState{
 
         return state;
     }
-
-    /*
-    private boolean isValidMove(String move){
-        // Extract flask indices.
-        String[] flaskIndices = move.split(AT)[1].split(ARROW);
-
-        int fromIndex = Integer.parseInt(flaskIndices[0]);
-        int toIndex = Integer.parseInt(flaskIndices[1]);
-
-        Stack<Color> from = flasks.get(fromIndex);
-        Stack<Color> to = flasks.get(toIndex);
-
-        // Extract top color size of from flask.
-        int fromFlaskTopColorSize = Integer.parseInt(move.split(AT)[0]);
-
-        // Check "non-empty -> non-empty" scenario.
-        // Move should be considered only if the top color can be moved entirely.
-        boolean validForNonEmpty = !from.isEmpty() && !to.isEmpty() && from.peek().equals(to.peek())
-                && fromFlaskTopColorSize + to.size() <= MAX_FLASK_SIZE;
-
-        // Check "non-empty -> empty" scenario.
-        // When moving to empty, we need to check for following conditions to avoid redundant moves:
-        //  i. top color size < MAX
-        // ii. flask has more than 1 color
-        boolean validForEmpty = !from.isEmpty() && to.isEmpty()
-                //&& fromFlaskTopColorSize < MAX_FLASK_SIZE
-                && fromFlaskTopColorSize != from.size();
-
-        return validForNonEmpty || validForEmpty;
-    }
-    */
 
     @Override
     public boolean equals(Object o) {

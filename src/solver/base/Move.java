@@ -1,28 +1,38 @@
 package solver.base;
 
+import java.util.Objects;
+
 public class Move {
 
-    // TODO: Remove 'String move'
-    private String move;
-
-    private byte topColorSize;
-    private Color topColor;
-    private byte fromFlaskIndex;
-    private byte toFlaskIndex;
+    private final int topColorSize;
+    private final Color topColor;
+    private final int fromFlaskIndex;
+    private final int toFlaskIndex;
 
     private static final String SHORT_MOVE_FORMAT = "%d@%d->%d";
-    private static final String VERBOSE_MOVE_FORMAT = "%s from %d to %d\n";
+    private static final String VERBOSE_MOVE_FORMAT = "%s from %d to %d";
 
-    public Move(String move) {
-        this.move = move;
+    public Move(int topColorSize, Color topColor, int fromFlaskIndex, int toFlaskIndex) {
+        this.topColorSize = topColorSize;
+        this.topColor = topColor;
+        this.fromFlaskIndex = fromFlaskIndex;
+        this.toFlaskIndex = toFlaskIndex;
     }
 
-    public String getMove() {
-        return move;
+    public int getTopColorSize() {
+        return topColorSize;
     }
 
-    public void setMove(String move) {
-        this.move = move;
+    public Color getTopColor() {
+        return topColor;
+    }
+
+    public int getFromFlaskIndex() {
+        return fromFlaskIndex;
+    }
+
+    public int getToFlaskIndex() {
+        return toFlaskIndex;
     }
 
     public String getShortVersion(){
@@ -34,14 +44,27 @@ public class Move {
     }
 
     public Move getUndoMove(){
-        // TODO: Implement.
-        return new Move(move);
+        return new Move(topColorSize, topColor, toFlaskIndex, fromFlaskIndex);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Move move = (Move) o;
+        return topColorSize == move.topColorSize &&
+                fromFlaskIndex == move.fromFlaskIndex &&
+                toFlaskIndex == move.toFlaskIndex &&
+                topColor == move.topColor;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(topColorSize, topColor, fromFlaskIndex, toFlaskIndex);
     }
 
     @Override
     public String toString() {
-        return "Move{" +
-                "move='" + move + '\'' +
-                '}';
+        return getShortVersion();
     }
 }
