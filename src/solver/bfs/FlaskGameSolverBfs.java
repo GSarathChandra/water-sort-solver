@@ -1,6 +1,7 @@
 package solver.bfs;
 
 import solver.base.FlaskGameState;
+import solver.base.Move;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
@@ -74,7 +75,7 @@ public class FlaskGameSolverBfs {
             }
 
             // Iterate through nextMoves and enqueue the unvisited ones.
-            for(String nextMove : state.getNextMoves() ){
+            for(Move nextMove : state.getNextMoves() ){
                 FlaskGameState nextState = state.createCopy();
                 nextState.makeMove(nextMove);
                 stateCounter++;

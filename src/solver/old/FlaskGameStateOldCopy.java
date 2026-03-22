@@ -13,8 +13,6 @@ public class FlaskGameStateOldCopy {
     //TODO: Implement Builder.
     public List<Stack<Color>> flasks;
 
-    //TODO: Change to List of Moves.
-    //TODO: Better named as stateHistory?
     public ArrayList<String> movesHistory;
 
     public boolean isExhaustiveSearchMode(){
@@ -131,9 +129,9 @@ public class FlaskGameStateOldCopy {
     }
 
     //TODO: Modernize this using streams, etc. to parallelize and improve performance.
-    public FlaskGameState createCopy(){
+    public FlaskGameStateOldCopy createCopy(){
         // Need tp deep clone manually.
-        FlaskGameState copy = new FlaskGameState();
+        FlaskGameStateOldCopy copy = new FlaskGameStateOldCopy();
 
         copy.flasks = new ArrayList<>(this.flasks.size());
         for(Stack<Color> flask : this.flasks){
@@ -142,7 +140,7 @@ public class FlaskGameStateOldCopy {
             copy.flasks.add(copyFlask);
         }
 
-        copy.movesHistory = new LinkedList<>();
+        copy.movesHistory = new ArrayList<>(this.movesHistory.size());
         copy.movesHistory.addAll(this.movesHistory);
 
         return copy;
@@ -196,10 +194,10 @@ public class FlaskGameStateOldCopy {
         return sb.toString();
     }
 
-    public static FlaskGameState buildState(List<List<Color>> flasks){
+    public static FlaskGameStateOldCopy buildState(List<List<Color>> flasks){
         Map<Color, Integer> colorCounts = new HashMap<>();
 
-        FlaskGameState state = new FlaskGameState();
+        FlaskGameStateOldCopy state = new FlaskGameStateOldCopy();
         state.flasks = new ArrayList<>();
 
         for(List<Color> flask : flasks){
@@ -221,7 +219,7 @@ public class FlaskGameStateOldCopy {
             }
         }
 
-        state.movesHistory = new LinkedList<>();
+        state.movesHistory = new ArrayList<>();
         state.movesHistory.add(state.getState());
 
         return state;
