@@ -372,9 +372,9 @@ public class FlaskGameState{
                 continue;
             }
             Stack<Color> kth = flasks.get(k);
-            if (!kth.isEmpty() && color.equals(kth.peek())) { // avoid moving to empty + protection against EmptyStackException + colors match
+            if (!kth.isEmpty() && color.equals(kth.peek())) {
                 int kthTopSize = getTopColorSize(kth);
-                if (kthTopSize == kth.size() && kthTopSize + colorSize == MAX_FLASK_SIZE) { // topColor in kth flask is the only color in it + kth flask and current flask form the whole
+                if (kthTopSize == kth.size() && kthTopSize + colorSize == MAX_FLASK_SIZE) {
                     if (isDebugMode()) {
                         String elsewhereMove = String.format(MOVE_FORMAT, colorSize, fromIndex, k);
                         System.out.println("Found last step elsewhere: " + elsewhereMove + " for " + this.getState());
@@ -386,35 +386,3 @@ public class FlaskGameState{
         return false;
     }
 }
-
-
-/*
-    private boolean isValidMove(String move){
-        // Extract flask indices.
-        String[] flaskIndices = move.split(AT)[1].split(ARROW);
-
-        int fromIndex = Integer.parseInt(flaskIndices[0]);
-        int toIndex = Integer.parseInt(flaskIndices[1]);
-
-        Stack<Color> from = flasks.get(fromIndex);
-        Stack<Color> to = flasks.get(toIndex);
-
-        // Extract top color size of from flask.
-        int fromFlaskTopColorSize = Integer.parseInt(move.split(AT)[0]);
-
-        // Check "non-empty -> non-empty" scenario.
-        // Move should be considered only if the top color can be moved entirely.
-        boolean validForNonEmpty = !from.isEmpty() && !to.isEmpty() && from.peek().equals(to.peek())
-                && fromFlaskTopColorSize + to.size() <= MAX_FLASK_SIZE;
-
-        // Check "non-empty -> empty" scenario.
-        // When moving to empty, we need to check for following conditions to avoid redundant moves:
-        //  i. top color size < MAX
-        // ii. flask has more than 1 color
-        boolean validForEmpty = !from.isEmpty() && to.isEmpty()
-                //&& fromFlaskTopColorSize < MAX_FLASK_SIZE
-                && fromFlaskTopColorSize != from.size();
-
-        return validForNonEmpty || validForEmpty;
-    }
-    */
