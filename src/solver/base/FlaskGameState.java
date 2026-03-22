@@ -58,6 +58,12 @@ public class FlaskGameState{
             }
         }
 
+        // Check for scenarios where the color is one step away from being solved.
+        // In such cases, avoid moving to empty flask
+        // and prefer moving the color to flask with lower index - i.e, solved flasks towards the starting.
+        // i.e., when firstTopColorSize == 0 || secondTopColorSize == 0
+        // is exactly 4;
+
         return moves;
     }
 
@@ -308,6 +314,7 @@ public class FlaskGameState{
 
         int fromTopColorSize = getTopColorSize(from);
 
+        // Check "non-empty from -> non-empty to" scenario.
         if (!from.isEmpty() && !to.isEmpty() && from.peek().equals(to.peek())
                 // Move should be considered only if the top color can be moved entirely.
                 && fromTopColorSize + to.size() <= MAX_FLASK_SIZE) {
@@ -335,6 +342,8 @@ public class FlaskGameState{
 
         int fromTopColorSize = getTopColorSize(from);
 
+        // When moving to empty, we're allowing only size < MAX to avoid redundant moves
+        // - i.e., moving solved flasks into empty flasks or flask with single color into empty flask
         if (!from.isEmpty() && to.isEmpty()
                 // Move shouldn't be considered if top color is the only color in the flask.
                 && fromTopColorSize != from.size()
@@ -342,12 +351,14 @@ public class FlaskGameState{
                 && fromTopColorSize < MAX_FLASK_SIZE) {
 
             if (removeRedundantMovesToEmpty()) {
+                // Check if there exists another non-empty flask which would solve the color.
                 if (!isSolvableElsewhere(fromIndex, toIndex, from.peek(), fromTopColorSize)) {
                     String nextMove = String.format(MOVE_FORMAT, fromTopColorSize, fromIndex, toIndex);
                     if (isDebugMode()) System.out.println("Case 4: " + nextMove);
                     moves.add(nextMove);
                 }
             } else {
+                // Retaining else block for backup until confident about removeRedundantMovesToEmpty.
                 String nextMove = String.format(MOVE_FORMAT, fromTopColorSize, fromIndex, toIndex);
                 if (isDebugMode()) System.out.println("Case 3: " + nextMove);
                 moves.add(nextMove);
