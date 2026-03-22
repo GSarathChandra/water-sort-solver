@@ -52,18 +52,21 @@ public class FlaskGameState{
         List<String> moves = new ArrayList<>();
 
         for(int i = 0; i < flasks.size(); i++){
-            for(int j = 0; j < flasks.size(); j++){
-                if (i == j) continue;
-
-                if (flasks.get(j).isEmpty()) {
-                    addMoveToEmptyFlask(i, j, moves);
-                } else {
-                    addPourMove(i, j, moves);
-                }
+            for(int j = i+1; j < flasks.size(); j++){
+                tryAddMove(i, j, moves);
+                tryAddMove(j, i, moves);
             }
         }
 
         return moves;
+    }
+
+    private void tryAddMove(int fromIndex, int toIndex, List<String> moves) {
+        if (flasks.get(toIndex).isEmpty()) {
+            addMoveToEmptyFlask(fromIndex, toIndex, moves);
+        } else {
+            addPourMove(fromIndex, toIndex, moves);
+        }
     }
 
     private void updateFlasksForMove(String move){
