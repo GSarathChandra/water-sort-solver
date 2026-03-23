@@ -10,16 +10,7 @@ public class FlaskGameSolverMain {
     public static void main(String[] args){
         FlaskGameSolver dfsSolver = new FlaskGameSolver();
 
-        FlaskGameState board;
-        if (args.length > 0 && args[0].equals("test")) { // sanity test flow
-            board = getBoard1();
-        } else if (args.length > 0 && args[0].equals("full")) { // full test flow
-            board = getLevel239();
-        } else {
-            board = getBoard1(); // default run flow
-        }
-
-        dfsSolver.solve(board,  Integer.MAX_VALUE -10, 100, false);
+        dfsSolver.solve(getLevel239(),  Integer.MAX_VALUE -10, 100, false);
     }
 
     /*

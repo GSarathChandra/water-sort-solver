@@ -81,7 +81,7 @@ public class FlaskGameSolver {
         if(limitReached) {
             System.out.println("\nExiting after finding requested number of solutions.");
         } else {
-            System.out.println("\nExiting after finding all solutions."); // TODO: Would this be exhaustive search?
+            System.out.println("\nExiting after finding all solutions.");
         }
         solveEndInstant = now();
         printSolutionCountAndRunningTime();
