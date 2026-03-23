@@ -24,18 +24,34 @@ public class FlaskGameState{
     //TODO: Better named as stateHistory?
     public LinkedList<String> movesHistory;
 
-    private boolean isDebugMode(){
-        return false;
+    private boolean debugMode = false;
+    private boolean redundantMovesRemoved = true;
+    private boolean reverseMovesRemoved = true;
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
+    public void setRedundantMovesRemoved(boolean redundantMovesRemoved) {
+        this.redundantMovesRemoved = redundantMovesRemoved;
+    }
+
+    public void setReverseMovesRemoved(boolean reverseMovesRemoved) {
+        this.reverseMovesRemoved = reverseMovesRemoved;
+    }
+
+    public boolean isDebugMode(){
+        return debugMode;
     }
 
     // public for Testing
     public boolean removeRedundantMovesToEmpty(){
-        return true;
+        return redundantMovesRemoved;
     } // Verified to be working.
 
     // public for Testing
     public boolean removeReverseMoves(){
-        return true;
+        return reverseMovesRemoved;
     } // Yet to be verified.
 
     public boolean isSolved(){
@@ -370,8 +386,7 @@ public class FlaskGameState{
         return state;
     }
 
-    /*
-    private boolean isValidMove(String move){
+    public boolean isValidMove(String move){
         // Extract flask indices.
         String[] flaskIndices = move.split(AT)[1].split(ARROW);
 
@@ -399,7 +414,6 @@ public class FlaskGameState{
 
         return validForNonEmpty || validForEmpty;
     }
-    */
 
     @Override
     public boolean equals(Object o) {
