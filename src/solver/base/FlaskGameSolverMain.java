@@ -11,12 +11,12 @@ public class FlaskGameSolverMain {
         FlaskGameSolver dfsSolver = new FlaskGameSolver();
 
         FlaskGameState board;
-        if (args.length > 0 && args[0].equals("test")) {
+        if (args.length > 0 && args[0].equals("test")) { // sanity test flow
             board = getBoard1();
-        } else if (args.length > 0 && args[0].equals("full")) {
+        } else if (args.length > 0 && args[0].equals("full")) { // full test flow
             board = getLevel239();
         } else {
-            board = getBoard1();
+            board = getBoard1(); // default run flow
         }
 
         dfsSolver.solve(board,  Integer.MAX_VALUE -10, 100, false);
