@@ -15,18 +15,34 @@ public class FlaskGameState{
 
     public LinkedList<Move> movesHistory;
 
-    private boolean isDebugMode(){
-        return false;
+    private boolean debugMode = false;
+    private boolean redundantMovesRemoved = true;
+    private boolean reverseMovesRemoved = true;
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
+    public void setRedundantMovesRemoved(boolean redundantMovesRemoved) {
+        this.redundantMovesRemoved = redundantMovesRemoved;
+    }
+
+    public void setReverseMovesRemoved(boolean reverseMovesRemoved) {
+        this.reverseMovesRemoved = reverseMovesRemoved;
+    }
+
+    public boolean isDebugMode(){
+        return debugMode;
     }
 
     // public for Testing
     public boolean removeRedundantMovesToEmpty(){
-        return true;
+        return redundantMovesRemoved;
     } // Verified to be working.
 
     // public for Testing
     public boolean removeReverseMoves(){
-        return true;
+        return reverseMovesRemoved;
     } // Yet to be verified.
 
     public boolean isSolved(){
@@ -327,6 +343,28 @@ public class FlaskGameState{
         state.movesHistory = new LinkedList<>();
 
         return state;
+    }
+
+    public boolean isValidMove(Move move){
+        int fromIndex = move.getFromFlaskIndex();
+        int toIndex = move.getToFlaskIndex();
+        int moveColorSize = move.getTopColorSize();
+        Color moveColor = move.getTopColor();
+
+        Stack<Color> from = flasks.get(fromIndex);
+        Stack<Color> to = flasks.get(toIndex);
+
+        if (from.isEmpty()) return false;
+        if (!from.peek().equals(moveColor)) return false;
+        if (getTopColorSize(from) < moveColorSize) return false;
+
+        // Check "non-empty -> non-empty" scenario.
+        if (!to.isEmpty()) {
+            return to.peek().equals(moveColor) && moveColorSize + to.size() <= MAX_FLASK_SIZE;
+        }
+
+        // Check "non-empty -> empty" scenario.
+        return moveColorSize != from.size();
     }
 
     @Override

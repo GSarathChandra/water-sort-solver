@@ -75,10 +75,14 @@ public class FlaskGameSolver {
         this.initState = state.createCopy();
         // Track running time.
         solveStartInstant = now();
-        backtrackingDfs(state);
+        boolean limitReached = backtrackingDfs(state);
 
         // If solutionsToCompute >  count of all solutions, code reaches here.
-        System.out.println("\nExiting after finding all solutions.");
+        if(limitReached) {
+            System.out.println("\nExiting after finding requested number of solutions.");
+        } else {
+            System.out.println("\nExiting after finding all solutions."); //TODO: Is this exhaustive search / where desired number of solutions were not found?
+        }
         solveEndInstant = now();
         printSolutionCountAndRunningTime();
     }
@@ -98,7 +102,7 @@ public class FlaskGameSolver {
         System.out.println("Total running time (in milliseconds) = " + Duration.between(solveStartInstant, solveEndInstant).toMillis());
     }
 
-    private void backtrackingDfs(FlaskGameState state){
+    private boolean backtrackingDfs(FlaskGameState state){
         // Update loopCounter for tracking.
         loopCounter++;
 
@@ -120,9 +124,9 @@ public class FlaskGameSolver {
                 System.out.println("\nExiting after finding requested number of solutions.");
                 solveEndInstant = now();
                 printSolutionCountAndRunningTime();
-                System.exit(0);
+                return true;
             }
-            return;
+            return false;
         }
 
         // Iterate through nextMoves and enqueue the unvisited ones.
@@ -132,13 +136,14 @@ public class FlaskGameSolver {
             printDebugData();
 
             if(!visited.contains(state)){
-                backtrackingDfs(state);
+                if(backtrackingDfs(state)) return true;
             }
 
             // Undo the last move in order to iterate through the further probable state.
             state.undoLastMove();
         }
         printDebugData();
+        return false;
     }
 
     private ZonedDateTime now(){
